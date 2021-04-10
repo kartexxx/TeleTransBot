@@ -19,7 +19,7 @@ def cevri(message):
     except:
         global lang
         translator = google_translator()
-        i = i = message.text
+        i = message.text
         s = translator.translate(i, lang_tgt= lang)
         bot.reply_to(message,s)
 print("bot aktif")
