@@ -11,7 +11,7 @@ bot = telebot.TeleBot("1716068298:AAF_WQrVuYSVZUupw-T4GHZzhqIjQ_EhO5c", skip_pen
 def cevri(message):
     try:
         global lang
-        dil = message.text.split(" ")[1]
+        dil = "tr"
         translator = google_translator()
         i = message.text
         s = translator.translate(i, lang_tgt= dil)
