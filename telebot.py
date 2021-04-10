@@ -1,57 +1,27 @@
-import os
-import html
-import logging
+import telebot
+from telebot import types
+from google_trans_new import LANGUAGES, google_translator
 
-from translate import detect_language, translate_text
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+translator = google_translator()
+lang = "en"
 
-# Can delete webhook if updates errors, using the following HTML request
-# https://api.telegram.org/bot<token>/deleteWebhook
+bot = telebot.TeleBot("TOKEN", skip_pending=True)
 
-# Set up initial telegram updater and dispatcher and logging configs
-
-# import json
-# with open('secrets.json', 'r') as f:
-#     parsed_json = json.load(f)
-# telebotToken = parsed_json['telebotToken']
-telebotToken = os.environ.get('TELEGRAM_TOKEN')
-
-updater = Updater(token=telebotToken, use_context=True)
-dispatcher = updater.dispatcher
-
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                     level=logging.INFO)
-
-
-def start(update, context):
-    # Send welcome message to user when start command is invoked
-    print("User "+str(update.effective_chat.id)+" made /start request\n")
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Welcome to the Google Translate bot! Any non-english text you type will be replied back to you in English.")
-
-
-def echo(update, context):
-    # Translate the incoming message text and unescape any escaped HTML characters
-    print("User "+str(update.effective_chat.id)+" requested translation")
-    translatedObject = translate_text('en',update.message.text)
-    translatedText = translatedObject['translatedText']
-    cleanedText = html.unescape(translatedText)
-    print
-    # If the original message was not in English, send the translated response to the user
-    if translatedObject['detectedSourceLanguage'] != 'en':
-        context.bot.send_message(chat_id=update.effective_chat.id, text=cleanedText)
-
-# Adding a handler for the start command from the user
-start_handler = CommandHandler('start', start)
-dispatcher.add_handler(start_handler)
-
-# Adding a handler for general messages from user
-echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
-dispatcher.add_handler(echo_handler)
-
-def poll_bot():
-    # Get the telegram bot polling
-    print("Telegram bot now polling...")
-    updater.start_polling()
-
-if __name__ == '__main__':
-    poll_bot()
+@bot.message_handler(content_types=["text"])
+def cevri(message):
+    try:
+        global lang
+        dil = message.text.split(" ")[1]
+        translator = google_translator()
+        i = message.reply_to_message.text
+        s = translator.translate(i, lang_tgt= dil)
+        bot.reply_to(message,s)
+    except:
+        global lang
+        translator = google_translator()
+        i = message.reply_to_message.text
+        s = translator.translate(i, lang_tgt= lang)
+        bot.reply_to(message,s)
+print("bot aktif")
+if name=="__main__":
+    bot.polling(none_stop=True)
