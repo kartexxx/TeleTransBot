@@ -14,7 +14,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 # with open('secrets.json', 'r') as f:
 #     parsed_json = json.load(f)
 # telebotToken = parsed_json['telebotToken']
-telebotToken = os.environ.get('TELEGRAM_TOKEN')
+telebotToken = os.environ.get('1716068298:AAF_WQrVuYSVZUupw-T4GHZzhqIjQ_EhO5c')
 
 updater = Updater(token=telebotToken, use_context=True)
 dispatcher = updater.dispatcher
